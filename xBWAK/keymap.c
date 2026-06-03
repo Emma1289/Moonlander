@@ -302,8 +302,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     break;
     case ST_MACRO_0:
     if (record->event.pressed) {
-      SEND_STRING(SS_LCTL(SS_TAP(X_SLASH))SS_DELAY(100)  SS_TAP(X_SLASH)SS_DELAY(100)  SS_TAP(X_N));
-      layer_move(0);
+      tap_code16(LCTL(KC_KP_SLASH));
+      wait_ms(100);                 
+      tap_code(KC_KP_SLASH);           
+      tap_code(KC_N);               
+      layer_move(0);                
     }
     break;
     case ST_MACRO_1:
