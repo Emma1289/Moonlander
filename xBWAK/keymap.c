@@ -305,7 +305,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       tap_code16(LCTL(KC_KP_SLASH));
       wait_ms(100);                 
       tap_code(KC_KP_SLASH);           
-      tap_code(KC_N);               
+      tap_code(KC_N);
+      SS_DELAY(100);               
       layer_move(0);                
     }
     break;
