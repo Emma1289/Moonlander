@@ -307,7 +307,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       tap_code(KC_KP_SLASH);           
       tap_code(KC_N);            
       layer_move(0);  
-      return false;              
+      return false;      
     }
     break;
     case ST_MACRO_1:
