@@ -309,8 +309,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     break;
     case ST_MACRO_1:
     if (record->event.pressed) {
-      SEND_STRING(SS_TAP(X_W));
+      if (record->tap.count > 0 && !record->tap.interrupted) {
+        // Quick tap: Ctrl+F (Find)
+        tap_code16(LCTL(KC_F));
+      } else {
+        // Hold: Mouse wheel up
+        register_code(KC_MS_WH_UP);
+      }
+    } else {
+      // On release, only unregister if it was a hold
+      if (!(record->tap.count > 0 && !record->tap.interrupted)) {
+        unregister_code(KC_MS_WH_UP);
+      }
     }
+  return false;
     break;
     case ST_MACRO_2:
     if (record->event.pressed) {
