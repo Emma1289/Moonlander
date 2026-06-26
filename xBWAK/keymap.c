@@ -313,23 +313,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       
       if (record->event.pressed) {
         press_time = timer_read();
-        is_holding = false;
+        is_holding = true;
+        // Don't register anything yet - wait to see if it's a tap or hold
       } else {
         // Key released
         uint16_t hold_duration = timer_elapsed(press_time);
         
-        // If held for less than tapping term, it's a tap
         if (hold_duration < TAPPING_TERM) {
-          // Tap: Ctrl+F
+          // Quick tap: Ctrl+F (Find)
           tap_code16(LCTL(KC_F));
-        } else {
-          // Hold: Mouse wheel up (send once on release)
-          tap_code16(KC_MS_WH_UP);
         }
+        // If it was a hold, we already handled scrolling in the hold logic
+        is_holding = false;
       }
       return false;
     }
-  return false;
     break;
     case ST_MACRO_2:
     if (record->event.pressed) {
