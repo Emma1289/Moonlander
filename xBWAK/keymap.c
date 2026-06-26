@@ -309,19 +309,33 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     break;
     case ST_MACRO_1:{
       static uint16_t press_time = 0;
+      static bool is_scrolling = false;
       
       if (record->event.pressed) {
         press_time = timer_read();
+        is_scrolling = false;
       } else {
-        // Key released - check how long it was held
-        if (timer_elapsed(press_time) < TAPPING_TERM) {
+        // Key released
+        uint16_t hold_duration = timer_elapsed(press_time);
+        
+        if (hold_duration < TAPPING_TERM) {
           // Quick tap: Ctrl+F (Find)
           tap_code16(LCTL(KC_F));
-        } else {
-          // Hold: Mouse wheel up (one scroll)
-          tap_code16(KC_MS_WH_UP);
+        }
+        
+        // Stop scrolling if it was happening
+        if (is_scrolling) {
+          unregister_code(KC_MS_WH_UP);
+          is_scrolling = false;
         }
       }
+      
+      // Check if we should start continuous scrolling
+      if (record->event.pressed && timer_elapsed(press_time) >= TAPPING_TERM && !is_scrolling) {
+        is_scrolling = true;
+        register_code(KC_MS_WH_UP);  // Start scrolling
+      }
+      
       return false;
     }
     break;
